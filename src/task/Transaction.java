@@ -2,10 +2,7 @@ package task;
 
 import utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Transaction {
     private Map<Integer, List<Task>> transaction = new HashMap<>();
@@ -28,7 +25,6 @@ public class Transaction {
         for (int i = idx; i>=0; i--){
             this.transaction.get(schedule).get(i).setStatus("COMMITTED");
             lock.unlock(this.transaction.get(schedule).get(i).getResource());
-            this.transaction.get(schedule).remove(i);
         }
         System.out.println("Committed schedule "+ schedule);
         for (Task task : this.waitingList){
@@ -45,6 +41,18 @@ public class Transaction {
                 this.waitingList.remove(task);
             }
         }
+    }
+
+    public Task getTaskByQueueAtTransaction(int queue){
+        Set<Integer> keys = this.transaction.keySet();
+        for (int key : keys){
+            List<Task> tasks = this.transaction.get(key);
+            for (Task task: tasks){
+                if (task.getQueue() == queue)
+                    return task;
+            }
+        }
+        return null;
     }
 
     public boolean isWaiting(Task task){

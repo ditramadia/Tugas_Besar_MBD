@@ -10,28 +10,28 @@ public class Lock {
         lock = new HashMap<>();
     }
 
-    public void addLock(String taskName, String type, int schedule){
-        System.out.println("Grant access "+type+" "+taskName+" in schedule "+ schedule);
-        lock.put(taskName, new TypeLock(type, schedule));
+    public void addLock(String resource, String type, int schedule){
+        System.out.println("Grant access "+type+" "+resource+" in schedule "+ schedule);
+        lock.put(resource, new TypeLock(type, schedule));
     }
 
-    public void unlock(String taskName){
-        if (!lock.containsKey(taskName))
+    public void unlock(String resource){
+        if (!lock.containsKey(resource))
             return;
 
-        TypeLock temp = lock.get(taskName);
-        lock.remove(taskName);
+        TypeLock temp = lock.get(resource);
+        lock.remove(resource);
 
-        System.out.println("Unlock "+ taskName +" in schedule "+ temp.getSchedule());
+        System.out.println("Unlock "+ resource +" in schedule "+ temp.getSchedule());
     }
 
     public boolean checkPermission(Task task, String type){
-        TypeLock typeLock = lock.get(task.getTaskName());
+        TypeLock typeLock = lock.get(task.getResource());
 
         if (typeLock == null)
             return true;
 
-        if (task.getSchedule() == typeLock.schedule)
+        if (task.getTransaction() == typeLock.schedule)
             return true;
 
         if (typeLock.getType().equals("Exclusive"))

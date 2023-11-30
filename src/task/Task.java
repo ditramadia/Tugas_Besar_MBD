@@ -1,43 +1,43 @@
 package task;
 
 public class Task {
-    private static int _queue = 1;
-    private final int schedule;
-    private final String task;
-    private final String taskName;
+    private static int _queue = 0;
+    private final int transaction;
+    private final String operation;
+    private final String resource;
     private final int queue;
     private String status;
 
     public Task(){
-        this.schedule = 0;
-        this.taskName = "";
-        this.task = "";
+        this.transaction = 0;
+        this.resource = "";
+        this.operation = "";
         this.status = "UNCOMMITTED";
         this.queue = _queue;
         _queue++;
     }
 
-    public Task(String task, String taskName, int schedule){
-        this.schedule = schedule;
-        this.taskName = taskName;
-        this.task = task;
+    public Task(String operation, String resource, int transaction){
+        this.transaction = transaction;
+        this.resource = resource;
+        this.operation = operation;
         this.status = "UNCOMMITTED";
         this.queue = _queue;
         _queue++;
     }
 
-    public Task(String task, int schedule){
-        this.schedule = schedule;
-        this.task = task;
-        this.taskName = "";
+    public Task(String operation, int transaction){
+        this.transaction = transaction;
+        this.operation = operation;
+        this.resource = "";
         this.status = "UNCOMMITTED";
         this.queue = _queue;
         _queue++;
     }
 
-    public String getTask(){ return this.task;}
-    public String getTaskName(){ return this.taskName;}
-    public int getSchedule(){ return this.schedule;}
+    public String getOperation(){ return this.operation;}
+    public String getResource(){ return this.resource;}
+    public int getTransaction(){ return this.transaction;}
     public String getStatus(){ return this.status;}
     public int getQueue(){return this.queue;}
 
@@ -46,15 +46,15 @@ public class Task {
 
     @Override
     public String toString() {
-        switch (this.task) {
+        switch (this.operation) {
             case "W" -> {
-                return "Write task " + this.taskName + " in Time " + this.schedule;
+                return "Write task " + this.resource + " in Time " + this.transaction;
             }
             case "R" -> {
-                return "Read task " + this.taskName + " in Time " + this.schedule;
+                return "Read task " + this.resource + " in Time " + this.transaction;
             }
             case "C" -> {
-                return "Committed Time "+this.schedule;
+                return "Committed Time "+this.transaction;
             }
             default -> {
                 return "Nothing to do";

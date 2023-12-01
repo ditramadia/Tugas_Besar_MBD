@@ -38,7 +38,8 @@ public class Main {
         //     }
         // }
         // Algorithm two = new TwoPhaseLocking("R1(A) R2(A) W2(A) C1 R3(A) C2 W3(A) W3(B) C3");
+        // two.execute();
         Algorithm occ = new OptimisticConcurrencyControl("R1(A) R2(A) W2(A) C1 R3(A) C2 W3(A) W3(B) C3");
-        // occ.execute();
+        occ.execute();
     }
 }

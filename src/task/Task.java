@@ -53,6 +53,7 @@ public class Task {
     public int getQueue(){return this.queue;}
 
     public void setStatus(String status){ this.status = status;}
+    public void setQueue(){this.queue = _queue; _queue++;}
     public void setQueue(int queue){ this.queue = queue;}
 
     @Override

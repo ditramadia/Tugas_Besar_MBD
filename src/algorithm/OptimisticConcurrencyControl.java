@@ -1,6 +1,7 @@
 package algorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,9 +21,7 @@ import task.Schedule_OCC;
 public class OptimisticConcurrencyControl implements Algorithm {
     private List<Task> tasks = new ArrayList<>();
     private Schedule_OCC localSchedule;
-    private Schedule_OCC schedule;
-    private Map<Integer, HashSet<Task>> readSetOfTransactions = new HashMap<>();
-    private Map<Integer, HashSet<Task>> writeSetOfTransactions = new HashMap<>();
+    private List<Task> schedule;
 
     /**
      * Constructor
@@ -62,29 +61,47 @@ public class OptimisticConcurrencyControl implements Algorithm {
 
     // at this point, schedule has mapped out tasks, to each transactions
     // R1(A) R2(A) W2(A) C1 R3(A) C2 W3(A) W3(B) C3 given this list of requests
-    // solve this in occ algo?
     // in schedule :
-    // R1(A)1 C14
-    // R2(A)2 W2(A)3 C27
-    // R3(A)5 W3(A)6 W3(B)8 C39
-    // timestamp has already been had on queue attr
+    // R1(A),1<1,0,0> C1,4<1,2,0>
+    // R2(A),2<2,2,2> W2(A),3<2,3,0> C2,7
+    // R3(A),5<5,0,0> W3(A),6 W3(B),8 C3,9
+    // example is formatted as [task],[queue_number]
+    // note: timestamp has already been had on queue attr
     @Override
     public void execute() {
         // action in localSchedule
         for (Task task : this.tasks) {
-            // if request is a commit request
-            if (task.getOperation() == "C") {
+            System.out.println(task);
+            // if request is a commit request, goes to validation phase
+            if (task.getOperation().equals("C")) {
                 // validate
-                
+                for (Integer key : localSchedule.getTransactionNames()) {
+                    if (key != task.getSchedule()){ // tidak perlu validasi dengan diri sendiri
+                        if (!localSchedule.validate(task.getSchedule(), key)) {
+                            System.out.println("Commit failed! Rolling back");
+                            this.localSchedule.rollbackTransaction(key);
+                        }
+                    }
+                } 
+                // validation phase succeeded, move to writing phase
+                // operations either have been validated, 
+                // or worst case scenario, all transaction is rolled back
+                this.localSchedule.committed(task.getSchedule());
+                for (Task t : this.localSchedule.getTransactionSchedule(task.getSchedule())) {
+                    this.schedule.add(t);
+                }
             } else {
                 // not commit request, thus in reading phase
                 // reading phase put operations into rw sets
-                if (task.getOperation() == "R") {
-                    readSetOfTransactions.get(task.getSchedule()).add(task);
-                } else if (task.getOperation() == "W") {
-                    writeSetOfTransactions.get(task.getSchedule()).add(task);
+                if (task.getOperation().equals("R")) {
+                    System.out.println("Received Read Operation");
+                    localSchedule.addRead(task);
+                } else if (task.getOperation().equals("W")) {
+                    System.out.println("Received Write Operation");
+                    localSchedule.addWrite(task);
                 }
             }
         }
+        System.out.println(Arrays.toString(this.schedule.toArray()));
     }
 }

@@ -59,7 +59,7 @@ public class Task {
     public String toString() {
         switch (this.operation) {
             case "W" -> {
-                return "Write task " + this.resource + " in Schedule " + this.schedule;
+                return "Write task " + this.resource + " in Schedule " + this.schedule + " with queue number ";
             }
             case "R" -> {
                 return "Read task " + this.resource + " in Schedule " + this.schedule;

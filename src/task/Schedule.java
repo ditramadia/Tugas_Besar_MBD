@@ -5,8 +5,8 @@ import utils.Utils;
 import java.util.*;
 
 public class Schedule {
-    private Map<Integer, List<Task>> schedule = new HashMap<>();
-    protected static List<Task> waitingList;
+    private final Map<Integer, List<Task>> schedule = new HashMap<>();
+    private static List<Task> waitingList;
 
     public Schedule(List<Task> tasks) {
         for (Task task : tasks) {
@@ -22,13 +22,12 @@ public class Schedule {
     }
 
     public void committed(int schedule, int idx, Lock lock, List<Task> _task){
-        for (int i = idx; i>=0; i--){
+        for (int i = idx-1; i>=0; i--){
             try {
-                if (!this.schedule.get(schedule).get(i).getOperation().equals("C")) {
                     this.schedule.get(schedule).get(i).setStatus("COMMITTED");
-                    lock.unlock(this.schedule.get(schedule).get(i).getResource());
-                }
-            } catch (Exception e) {
+                    lock.unlock(this.schedule.get(schedule).get(i).getResource(), schedule);
+            }catch (Exception e){
+                System.out.print("");
             }
         }
         System.out.println(_task.get(idx));

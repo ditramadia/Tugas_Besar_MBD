@@ -19,21 +19,20 @@ public class Lock {
         }
     }
 
-    public void unlock(String resource){
+    public void unlock(String resource, int schedule){
         if (!lock.containsKey(resource))
             return;
 
         List<TypeLock> temp = lock.get(resource);
-        lock.remove(resource);
-        Iterator<TypeLock> iterator = temp.listIterator();
-        while (iterator.hasNext()){
-            TypeLock _temp = iterator.next();
-            System.out.println("Unlock resource "+ resource +" in Schedule "+ _temp.getSchedule());
+//        lock.remove(resource);
+        for (TypeLock _temp : temp) {
+            if (_temp.getSchedule() == schedule) {
+                System.out.println("Unlock resource " + resource + " in Schedule " + _temp.getSchedule());
+                lock.get(resource).remove(_temp);
+                if (lock.get(resource).isEmpty())
+                    lock.remove(resource);
+            }
         }
-    }
-
-    public boolean isLockEmpty(){
-        return lock.isEmpty();
     }
 
     public boolean checkPermission(Task task, String type){
@@ -68,8 +67,8 @@ public class Lock {
     }
 
     private class TypeLock{
-        private String type;
-        private int schedule;
+        private final String type;
+        private final int schedule;
 
         public TypeLock(String type, int schedule){
             this.type = type;

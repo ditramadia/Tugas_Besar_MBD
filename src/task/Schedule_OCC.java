@@ -1,7 +1,5 @@
 package task;
 
-import static task.Schedule.waitingList;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,7 +72,7 @@ public class Schedule_OCC extends Schedule {
             addWaitingList(task);
         }
         // adding the waiting list back to new requests and empty waiting list
-        for (Task task : waitingList) {
+        for (Task task : getWaitingList()) {
             if (this.getScheduleMap().containsKey(task.getSchedule())) {
                 this.getScheduleMap().get(task.getSchedule()).add(task);
             } else {
@@ -82,7 +80,7 @@ public class Schedule_OCC extends Schedule {
                 this.getScheduleMap().get(task.getSchedule()).add(task);
             }
         }
-        waitingList = new ArrayList<>();
+        setWaitingList(new ArrayList<>());
     }
 
     private class Timestamp {

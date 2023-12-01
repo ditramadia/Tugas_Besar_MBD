@@ -44,6 +44,7 @@ public class Task {
     public String getStatus(){return this.status;}
     public void setStatus(String status){ this.status = status;}
     public void setQueue(int queue){ this.queue = queue;}
+    public void setQueue(){ this.queue = _queue; _queue++;}
 
     @Override
     public String toString() {

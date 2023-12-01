@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Schedule {
     private final Map<Integer, List<Task>> schedule = new HashMap<>();
-    private static List<Task> waitingList;
+    private List<Task> waitingList;
 
     public Schedule(List<Task> tasks) {
         for (Task task : tasks) {
@@ -97,5 +97,11 @@ public class Schedule {
         for (Integer keyInteger : schedule.keySet()) {
             System.out.println(keyInteger + ": " + this.schedule.get(keyInteger));
         }
+    }
+    public List<Task> getWaitingList(){
+        return this.waitingList;
+    }
+    public void setWaitingList(List<Task> waitingList){
+        this.waitingList=waitingList;
     }
 }

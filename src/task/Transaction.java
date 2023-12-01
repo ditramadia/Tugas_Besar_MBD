@@ -6,9 +6,9 @@ import java.util.*;
 
 public class Transaction {
     private Map<Integer, List<Task>> transaction = new HashMap<>();
-    private List<Task> waitingList;
+    private static List<Task> waitingList;
 
-    public Transaction(Task[] tasks){
+    public Transaction(List<Task> tasks){
         for (Task task : tasks){
             if (this.transaction.containsKey(task.getTransaction())){
                 this.transaction.get(task.getTransaction()).add(task);
@@ -18,27 +18,37 @@ public class Transaction {
             }
         }
 
-        this.waitingList = new ArrayList<>();
+        waitingList = new ArrayList<>();
     }
 
-    public void committed(int schedule, int idx, Lock lock){
-        for (int i = idx; i>=0; i--){
-            this.transaction.get(schedule).get(i).setStatus("COMMITTED");
-            lock.unlock(this.transaction.get(schedule).get(i).getResource());
-        }
-        System.out.println("Committed schedule "+ schedule);
-        for (Task task : this.waitingList){
-            boolean isExclusive = Utils.isKeyExclusive(this.waitingList, task);
-            String keyType = "";
-            if (isExclusive){
-                keyType = "Exclusive";
-            }else {
-                keyType = "Shared";
+    public void committed(int schedule, int idx, Lock lock, List<Task> _task){
+        for (int i = idx-1; i>=0; i--){
+            try {
+                if (!this.transaction.get(schedule).get(i).getResource().equals("C")) {
+                    this.transaction.get(schedule).get(i).setStatus("COMMITTED");
+                    lock.unlock(this.transaction.get(schedule).get(i).getResource());
+                }
+            }catch (Exception e){
             }
-            if (lock.checkPermission(task,keyType)){
-                lock.addLock(task.getResource(),keyType,task.getTransaction());
-                System.out.println(task.toString());
-                this.waitingList.remove(task);
+        }
+        System.out.println(_task.get(idx));
+        if (!waitingList.isEmpty()){
+            Iterator<Task> iterator = waitingList.iterator();
+            while (iterator.hasNext()) {
+                Task currentTask = iterator.next();
+                String keyType = Utils.isKeyExclusive(_task, currentTask);
+
+                if (lock.checkPrivileged(currentTask)) {
+                    System.out.println(currentTask);
+                    iterator.remove();
+                    continue;
+                }
+
+                if (lock.checkPermission(currentTask, keyType)) {
+                    lock.addLock(currentTask.getResource(), keyType, currentTask.getTransaction());
+                    System.out.println(currentTask);
+                    iterator.remove();
+                }
             }
         }
     }

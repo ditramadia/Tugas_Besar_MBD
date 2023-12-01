@@ -25,6 +25,10 @@ public class Lock {
         System.out.println("Unlock "+ resource +" in schedule "+ temp.getSchedule());
     }
 
+    public boolean isLockEmpty(){
+        return lock.isEmpty();
+    }
+
     public boolean checkPermission(Task task, String type){
         TypeLock typeLock = lock.get(task.getResource());
 
@@ -38,6 +42,18 @@ public class Lock {
             return false;
 
         return !type.equals("Exclusive");
+    }
+
+    public boolean checkPrivileged(Task task){
+        TypeLock typeLock = lock.get(task.getResource());
+
+        if (typeLock == null)
+            return false;
+
+        if (task.getTransaction() == typeLock.schedule)
+            return true;
+
+        return false;
     }
 
     private class TypeLock{

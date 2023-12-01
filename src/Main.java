@@ -1,4 +1,5 @@
 import algorithm.Algorithm;
+import algorithm.OptimisticConcurrencyControl;
 import algorithm.TwoPhaseLocking;
 
 import java.util.HashMap;
@@ -15,7 +16,6 @@ public class Main {
             System.out.println("1. Two Phase Locking\n2. Optimistic Concurrency Control\n3. Exit");
             System.out.print("input: ");
             String input = scanner.nextLine();
-
             switch (input){
                 case "1" ->{
                     System.out.println("========================= TWO PHASE LOCKING =========================");

@@ -6,18 +6,18 @@ import java.util.*;
 
 public class Schedule {
     private Map<Integer, List<Task>> schedule = new HashMap<>();
-    private static List<Task> waitingList;
+    protected static List<Task> waitingList;
 
-    public Schedule(List<Task> tasks){
-        for (Task task : tasks){
-            if (this.schedule.containsKey(task.getSchedule())){
+    public Schedule(List<Task> tasks) {
+        for (Task task : tasks) {
+            if (this.schedule.containsKey(task.getSchedule())) {
                 this.schedule.get(task.getSchedule()).add(task);
-            }else {
+            } else {
                 this.schedule.put(task.getSchedule(), new ArrayList<>());
                 this.schedule.get(task.getSchedule()).add(task);
             }
         }
-
+        // showSchedule();
         waitingList = new ArrayList<>();
     }
 
@@ -28,11 +28,11 @@ public class Schedule {
                     this.schedule.get(schedule).get(i).setStatus("COMMITTED");
                     lock.unlock(this.schedule.get(schedule).get(i).getResource());
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
             }
         }
         System.out.println(_task.get(idx));
-        if (!waitingList.isEmpty()){
+        if (!waitingList.isEmpty()) {
             Iterator<Task> iterator = waitingList.iterator();
             while (iterator.hasNext()) {
                 Task currentTask = iterator.next();
@@ -53,11 +53,11 @@ public class Schedule {
         }
     }
 
-    public Task getTaskByQueueAtSchedule(int queue){
+    public Task getTaskByQueueAtSchedule(int queue) {
         Set<Integer> keys = this.schedule.keySet();
-        for (int key : keys){
+        for (int key : keys) {
             List<Task> tasks = this.schedule.get(key);
-            for (Task task: tasks){
+            for (Task task : tasks) {
                 if (task.getQueue() == queue)
                     return task;
             }
@@ -65,15 +65,38 @@ public class Schedule {
         return null;
     }
 
-    public boolean isWaiting(Task task){
-        return this.waitingList.contains(task);
+    public boolean isWaiting(Task task) {
+        return waitingList.contains(task);
     }
 
-    public boolean isWaitingEmpty(){
-        return this.waitingList.isEmpty();
+    public boolean isWaitingEmpty() {
+        return waitingList.isEmpty();
     }
 
-    public void addWaitingList(Task task){
-        this.waitingList.add(task);
+    public void addWaitingList(Task task) {
+        waitingList.add(task);
+    }
+
+    public List<Task> getTransactionSchedule(int schedule) {
+        return this.schedule.get(schedule);
+    }
+
+    public Map<Integer, List<Task>> getScheduleMap() {
+        return this.schedule;
+    }
+    
+    public Set<Integer> getTransactionNames() {
+        return this.schedule.keySet();
+    }
+    
+    public int getTransactionLatestTime(int schedule) {
+        // get latest element in list
+        return (this.schedule.get(schedule).get(this.schedule.get(schedule).size() - 1)).getQueue();
+    }
+    
+    public void showSchedule() {
+        for (Integer keyInteger : schedule.keySet()) {
+            System.out.println(keyInteger + ": " + this.schedule.get(keyInteger));
+        }
     }
 }

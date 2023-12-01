@@ -22,9 +22,9 @@ public class Schedule {
     }
 
     public void committed(int schedule, int idx, Lock lock, List<Task> _task){
-        for (int i = idx-1; i>=0; i--){
+        for (int i = idx; i>=0; i--){
             try {
-                if (!this.schedule.get(schedule).get(i).getResource().equals("C")) {
+                if (!this.schedule.get(schedule).get(i).getOperation().equals("C")) {
                     this.schedule.get(schedule).get(i).setStatus("COMMITTED");
                     lock.unlock(this.schedule.get(schedule).get(i).getResource());
                 }

@@ -2,7 +2,7 @@ package algorithm;
 
 import task.Lock;
 import task.Task;
-import task.Transaction;
+import task.Schedule;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class TwoPhaseLocking {
     private List<Task> tasks = new ArrayList<>();
-    private Transaction transaction;
+    private Schedule schedule;
     private Lock lock;
 
 
@@ -31,7 +31,7 @@ public class TwoPhaseLocking {
             }
         }
 
-        this.transaction = new Transaction(this.tasks);
+        this.schedule = new Schedule(this.tasks);
         this.lock = new Lock();
     }
 
@@ -39,7 +39,7 @@ public class TwoPhaseLocking {
     public void execute(){
         for (Task task: this.tasks){
             if (task.getOperation().equals("C")){
-                this.transaction.committed(task.getTransaction(), task.getQueue(), this.lock, this.tasks);
+                this.schedule.committed(task.getSchedule(), task.getQueue(), this.lock, this.tasks);
                 continue;
             }
             if (this.lock.checkPrivileged(task)){
@@ -47,11 +47,11 @@ public class TwoPhaseLocking {
                 continue;
             }
             if (this.lock.checkPermission(task, Utils.isKeyExclusive(this.tasks, task))){
-                this.lock.addLock(task.getResource(), Utils.isKeyExclusive(this.tasks, task), task.getTransaction());
+                this.lock.addLock(task.getResource(), Utils.isKeyExclusive(this.tasks, task), task.getSchedule());
                 System.out.println(task);
             }else{
-                System.out.println("Abort "+task.getOperation()+""+task.getTransaction()+""+"("+task.getResource()+")");
-                this.transaction.addWaitingList(task);
+                System.out.println("Abort "+task.getOperation()+""+task.getSchedule()+""+"("+task.getResource()+")");
+                this.schedule.addWaitingList(task);
             }
         }
     }

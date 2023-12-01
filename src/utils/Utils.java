@@ -12,7 +12,7 @@ public class Utils {
         for (Task tsk: tasks){
             if (tsk.getResource().equals(task.getResource())  &&
                     tsk.getOperation().equals("W") &&
-                    tsk.getTransaction()==task.getTransaction())
+                    tsk.getSchedule()==task.getSchedule())
                 return "Exclusive";
         }
         return "Shared";

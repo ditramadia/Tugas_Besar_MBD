@@ -4,17 +4,17 @@ import utils.Utils;
 
 import java.util.*;
 
-public class Transaction {
-    private Map<Integer, List<Task>> transaction = new HashMap<>();
+public class Schedule {
+    private Map<Integer, List<Task>> schedule = new HashMap<>();
     private static List<Task> waitingList;
 
-    public Transaction(List<Task> tasks){
+    public Schedule(List<Task> tasks){
         for (Task task : tasks){
-            if (this.transaction.containsKey(task.getTransaction())){
-                this.transaction.get(task.getTransaction()).add(task);
+            if (this.schedule.containsKey(task.getSchedule())){
+                this.schedule.get(task.getSchedule()).add(task);
             }else {
-                this.transaction.put(task.getTransaction(), new ArrayList<>());
-                this.transaction.get(task.getTransaction()).add(task);
+                this.schedule.put(task.getSchedule(), new ArrayList<>());
+                this.schedule.get(task.getSchedule()).add(task);
             }
         }
 
@@ -24,9 +24,9 @@ public class Transaction {
     public void committed(int schedule, int idx, Lock lock, List<Task> _task){
         for (int i = idx-1; i>=0; i--){
             try {
-                if (!this.transaction.get(schedule).get(i).getResource().equals("C")) {
-                    this.transaction.get(schedule).get(i).setStatus("COMMITTED");
-                    lock.unlock(this.transaction.get(schedule).get(i).getResource());
+                if (!this.schedule.get(schedule).get(i).getResource().equals("C")) {
+                    this.schedule.get(schedule).get(i).setStatus("COMMITTED");
+                    lock.unlock(this.schedule.get(schedule).get(i).getResource());
                 }
             }catch (Exception e){
             }
@@ -45,7 +45,7 @@ public class Transaction {
                 }
 
                 if (lock.checkPermission(currentTask, keyType)) {
-                    lock.addLock(currentTask.getResource(), keyType, currentTask.getTransaction());
+                    lock.addLock(currentTask.getResource(), keyType, currentTask.getSchedule());
                     System.out.println(currentTask);
                     iterator.remove();
                 }
@@ -53,10 +53,10 @@ public class Transaction {
         }
     }
 
-    public Task getTaskByQueueAtTransaction(int queue){
-        Set<Integer> keys = this.transaction.keySet();
+    public Task getTaskByQueueAtSchedule(int queue){
+        Set<Integer> keys = this.schedule.keySet();
         for (int key : keys){
-            List<Task> tasks = this.transaction.get(key);
+            List<Task> tasks = this.schedule.get(key);
             for (Task task: tasks){
                 if (task.getQueue() == queue)
                     return task;

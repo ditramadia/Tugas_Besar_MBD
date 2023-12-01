@@ -19,15 +19,6 @@ public class Task {
     private int queue;
     private String status;
 
-    public Task(){
-        this.schedule = 0;
-        this.resource = "";
-        this.operation = "";
-        this.status = "UNCOMMITTED";
-        this.queue = _queue;
-        _queue++;
-    }
-
     public Task(String operation, String resource, int schedule){
         this.schedule = schedule;
         this.resource = resource;
@@ -49,9 +40,8 @@ public class Task {
     public String getOperation(){ return this.operation;}
     public String getResource(){ return this.resource;}
     public int getSchedule(){ return this.schedule;}
-    public String getStatus(){ return this.status;}
     public int getQueue(){return this.queue;}
-
+    public String getStatus(){return this.status;}
     public void setStatus(String status){ this.status = status;}
     public void setQueue(int queue){ this.queue = queue;}
 

@@ -11,7 +11,7 @@ public class Lock {
     }
 
     public void addLock(String resource, String type, int schedule){
-        System.out.println("Grant access "+type+" "+resource+" in schedule "+ schedule);
+        System.out.println("Grant access "+type+" "+resource+" in Schedule "+ schedule);
         lock.put(resource, new TypeLock(type, schedule));
     }
 
@@ -22,7 +22,11 @@ public class Lock {
         TypeLock temp = lock.get(resource);
         lock.remove(resource);
 
-        System.out.println("Unlock "+ resource +" in schedule "+ temp.getSchedule());
+        System.out.println("Unlock resource "+ resource +" in Schedule "+ temp.getSchedule());
+    }
+
+    public boolean isLockEmpty(){
+        return lock.isEmpty();
     }
 
     public boolean checkPermission(Task task, String type){
@@ -31,13 +35,25 @@ public class Lock {
         if (typeLock == null)
             return true;
 
-        if (task.getTransaction() == typeLock.schedule)
+        if (task.getSchedule() == typeLock.schedule)
             return true;
 
         if (typeLock.getType().equals("Exclusive"))
             return false;
 
         return !type.equals("Exclusive");
+    }
+
+    public boolean checkPrivileged(Task task){
+        TypeLock typeLock = lock.get(task.getResource());
+
+        if (typeLock == null)
+            return false;
+
+        if (task.getSchedule() == typeLock.schedule)
+            return true;
+
+        return false;
     }
 
     private class TypeLock{

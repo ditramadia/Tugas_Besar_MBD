@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import task.Task;
 import task.TimestampedTask;
-import task.Transaction;
+import task.Schedule;
 
 /**
  * OptimisticConcurrencyControl (OCC) class <p>
@@ -15,15 +15,15 @@ import task.Transaction;
  */
 public class OptimisticConcurrencyControl {
     private List<Task> tasks = new ArrayList<>();
-    private Transaction transaction;
+    private Schedule schedule;
     static int scheduleTime = 0;
     /**
      * Constructor <p>
      * Melakukan parsing string dan memetakan task-task yang diparsing menjadi schedule
-     * @param transaction 1 string berisi task-task contohnya (R1(A) R2(B) W1(A) C1 ...) <p>
+     * @param schedule 1 string berisi task-task contohnya (R1(A) R2(B) W1(A) C1 ...) <p>
      */
-    public OptimisticConcurrencyControl(String transaction){
-        String[] _temp = transaction.split(" ");
+    public OptimisticConcurrencyControl(String schedule){
+        String[] _temp = schedule.split(" ");
         // Matching pattern XY(Z)
         Pattern pattern1 = Pattern.compile("([A-Za-z])(\\d+)\\(([^)]+)\\)");
         // Matching pattern XY
@@ -49,6 +49,6 @@ public class OptimisticConcurrencyControl {
                 scheduleTime++;
             }
         }
-        this.transaction = new Transaction((Task[]) this.tasks.toArray());
+        this.schedule = new Schedule(this.tasks);
     }
 }

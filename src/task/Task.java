@@ -1,5 +1,16 @@
 package task;
 
+/**
+ * Task class <p>
+ * Merepresentasikan task yang dilakukan di dalam schedule <p>
+ * Biasanya task ditulis dengan notasi XY(Z) dengan <p>
+ * operation = X = jenis operasi yang dilakukan (R)ead, (W)rite, atau (C)ommit <p>
+ * transaction = Y = nama transaksi (1,2,...,n) dengan n adalah bilangan asli sembarang <p>
+ * resource = Z = resource yang diakses dalam operasi <p>
+ * queue = nomor urut task yang akan dilakukan dalam schedule <p>
+ * status = status task (uncommitted, committed, aborted, finished) 
+ * (dapat berubah tergantung metode concurrency control) <p>
+ */
 public class Task {
     private static int _queue = 0;
     private final int transaction;

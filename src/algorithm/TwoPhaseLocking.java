@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TwoPhaseLocking {
-    private List<Task> tasks = new ArrayList<>();
-    private Schedule schedule;
-    private Lock lock;
+public class TwoPhaseLocking implements Algorithm {
+    private final List<Task> tasks = new ArrayList<>();
+    private final Schedule schedule;
+    private final Lock lock;
 
 
     public TwoPhaseLocking(String transaction){
@@ -36,6 +36,7 @@ public class TwoPhaseLocking {
     }
 
 
+    @Override
     public void execute(){
         for (Task task: this.tasks){
             if (task.getOperation().equals("C")){

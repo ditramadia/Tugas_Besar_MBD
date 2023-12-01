@@ -3,6 +3,7 @@ package task;
 import java.util.HashSet;
 import java.util.Set;
 
+//TODO: how to integrate timestamped task and transaction OCC to Transaction.java?
 public class Transaction_OCC {
     private TimeStamp ts;
     private Set<Task> readSet;

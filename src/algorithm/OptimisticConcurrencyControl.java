@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import task.Task;
-import task.Schedule;
+import task.Schedule_OCC;
 
 /**
  * OptimisticConcurrencyControl (OCC) class
@@ -19,8 +19,8 @@ import task.Schedule;
  */
 public class OptimisticConcurrencyControl implements Algorithm {
     private List<Task> tasks = new ArrayList<>();
-    private Schedule localSchedule;
-    private Schedule schedule;
+    private Schedule_OCC localSchedule;
+    private Schedule_OCC schedule;
     private Map<Integer, HashSet<Task>> readSetOfTransactions = new HashMap<>();
     private Map<Integer, HashSet<Task>> writeSetOfTransactions = new HashMap<>();
 
@@ -57,8 +57,7 @@ public class OptimisticConcurrencyControl implements Algorithm {
                                 Integer.parseInt(match2.group(2))));
             }
         }
-        this.localSchedule = new Schedule(this.tasks);
-        this.instantiateRWSets();
+        this.localSchedule = new Schedule_OCC(this.tasks);
     }
 
     // at this point, schedule has mapped out tasks, to each transactions
@@ -76,14 +75,7 @@ public class OptimisticConcurrencyControl implements Algorithm {
             // if request is a commit request
             if (task.getOperation() == "C") {
                 // validate
-                // checking all transactions
-                for (Integer keyInteger : this.localSchedule.getScheduleKeys()) {
-                    // if finish time of Transaction(keyInteger) < task time
-                    // if commit time of Transaction(keyInteger) < task commit time
-                    // if last read time Transaction(keyInteger) < last read time task
-                }
-                // clear RW Set for transaction being validated
-                clearRWSetOfTransaction(task.getSchedule());
+                
             } else {
                 // not commit request, thus in reading phase
                 // reading phase put operations into rw sets
@@ -94,24 +86,5 @@ public class OptimisticConcurrencyControl implements Algorithm {
                 }
             }
         }
-    }
-
-    // counting how many transactions happening in schedule
-    public void instantiateRWSets() {
-        for (Task task : this.tasks) {
-            readSetOfTransactions.putIfAbsent(task.getSchedule(), new HashSet<Task>());
-            writeSetOfTransactions.putIfAbsent(task.getSchedule(), new HashSet<Task>());
-        }
-    }
-
-    // clearing Read/Write set of transaction x
-    public void clearRWSetOfTransaction(int schedule) {
-        readSetOfTransactions.get(schedule).clear();
-        writeSetOfTransactions.get(schedule).clear();
-    }
-
-    // rolling back for validation
-    public void rollbackTransaction(int olderSchedule, int youngerSchedule) {
-
     }
 }

@@ -77,23 +77,23 @@ public class Schedule {
         waitingList.add(task);
     }
 
-    public List<Task> getTransaction(int schedule) {
+    public List<Task> getTransactionSchedule(int schedule) {
         return this.schedule.get(schedule);
     }
 
+    public Map<Integer, List<Task>> getScheduleMap() {
+        return this.schedule;
+    }
+    
+    public Set<Integer> getTransactionNames() {
+        return this.schedule.keySet();
+    }
+    
     public int getTransactionLatestTime(int schedule) {
         // get latest element in list
         return (this.schedule.get(schedule).get(this.schedule.get(schedule).size() - 1)).getQueue();
     }
-
-    public Map<Integer, List<Task>> getSchedule() {
-        return this.schedule;
-    }
-
-    public Set<Integer> getScheduleKeys() {
-        return this.schedule.keySet();
-    }
-
+    
     public void showSchedule() {
         for (Integer keyInteger : schedule.keySet()) {
             System.out.println(keyInteger + ": " + this.schedule.get(keyInteger));

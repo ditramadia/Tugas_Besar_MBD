@@ -16,7 +16,7 @@ public class Task {
     private final int schedule;
     private final String operation;
     private final String resource;
-    private final int queue;
+    private int queue;
     private String status;
 
     public Task(){
@@ -53,7 +53,7 @@ public class Task {
     public int getQueue(){return this.queue;}
 
     public void setStatus(String status){ this.status = status;}
-
+    public void setQueue(int queue){ this.queue = queue;}
 
     @Override
     public String toString() {

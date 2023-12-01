@@ -21,14 +21,14 @@ public class Main {
                     System.out.println("========================= TWO PHASE LOCKING =========================");
                     System.out.print("Insert tasks: ");
                     String tasks = scanner.nextLine();
-                    algorithm = new TwoPhaseLocking(tasks);
+                    algorithm = new TwoPhaseLocking(tasks.toUpperCase());
                     algorithm.execute();
                 }
                 case "2" ->{
                     System.out.println("========================= OPTIMISTIC CONCURRENCY CONTROL =========================");
                     System.out.print("Insert tasks: ");
                     String tasks = scanner.nextLine();
-                    algorithm = new TwoPhaseLocking(tasks); //TODO: change to OCC
+                    algorithm = new TwoPhaseLocking(tasks.toUpperCase()); //TODO: change to OCC
                     algorithm.execute();
                 }
                 default -> {

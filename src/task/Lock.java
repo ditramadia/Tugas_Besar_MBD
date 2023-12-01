@@ -1,10 +1,9 @@
 package task;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Lock {
-    private static Map<String, TypeLock> lock;
+    private static Map<String, List<TypeLock>> lock;
 
     public Lock(){
         lock = new HashMap<>();
@@ -12,17 +11,25 @@ public class Lock {
 
     public void addLock(String resource, String type, int schedule){
         System.out.println("Grant access "+type+" "+resource+" in Schedule "+ schedule);
-        lock.put(resource, new TypeLock(type, schedule));
+        if (lock.containsKey(resource)){
+            lock.get(resource).add(new TypeLock(type, schedule));
+        }else {
+            lock.put(resource, new ArrayList<>());
+            lock.get(resource).add(new TypeLock(type, schedule));
+        }
     }
 
     public void unlock(String resource){
         if (!lock.containsKey(resource))
             return;
 
-        TypeLock temp = lock.get(resource);
+        List<TypeLock> temp = lock.get(resource);
         lock.remove(resource);
-
-        System.out.println("Unlock resource "+ resource +" in Schedule "+ temp.getSchedule());
+        Iterator<TypeLock> iterator = temp.listIterator();
+        while (iterator.hasNext()){
+            TypeLock _temp = iterator.next();
+            System.out.println("Unlock resource "+ resource +" in Schedule "+ _temp.getSchedule());
+        }
     }
 
     public boolean isLockEmpty(){
@@ -30,28 +37,32 @@ public class Lock {
     }
 
     public boolean checkPermission(Task task, String type){
-        TypeLock typeLock = lock.get(task.getResource());
+        List<TypeLock> typeLocks = lock.get(task.getResource());
 
-        if (typeLock == null)
+        if (typeLocks == null)
             return true;
 
-        if (task.getSchedule() == typeLock.schedule)
-            return true;
+        for (TypeLock typeLock: typeLocks) {
+            if (task.getSchedule() == typeLock.schedule)
+                return true;
 
-        if (typeLock.getType().equals("Exclusive"))
-            return false;
+            if (typeLock.getType().equals("Exclusive"))
+                return false;
+        }
 
         return !type.equals("Exclusive");
     }
 
     public boolean checkPrivileged(Task task){
-        TypeLock typeLock = lock.get(task.getResource());
+        List<TypeLock> typeLocks = lock.get(task.getResource());
 
-        if (typeLock == null)
+        if (typeLocks == null)
             return false;
 
-        if (task.getSchedule() == typeLock.schedule)
-            return true;
+        for (TypeLock typeLock: typeLocks) {
+            if (task.getSchedule() == typeLock.schedule)
+                return true;
+        }
 
         return false;
     }

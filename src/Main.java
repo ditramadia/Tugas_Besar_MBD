@@ -28,7 +28,7 @@ public class Main {
                     System.out.println("========================= OPTIMISTIC CONCURRENCY CONTROL =========================");
                     System.out.print("Insert tasks: ");
                     String tasks = scanner.nextLine();
-                    algorithm = new TwoPhaseLocking(tasks.toUpperCase()); //TODO: change to OCC
+                    algorithm = new OptimisticConcurrencyControl(tasks.toUpperCase());
                     algorithm.execute();
                 }
                 default -> {

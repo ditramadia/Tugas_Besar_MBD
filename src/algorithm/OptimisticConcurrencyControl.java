@@ -21,7 +21,7 @@ import task.Schedule_OCC;
 public class OptimisticConcurrencyControl implements Algorithm {
     private List<Task> tasks = new ArrayList<>();
     private Schedule_OCC localSchedule;
-    private List<Task> schedule;
+    private List<Task> schedule = new ArrayList<>();
 
     /**
      * Constructor
@@ -102,6 +102,6 @@ public class OptimisticConcurrencyControl implements Algorithm {
                 }
             }
         }
-        System.out.println(Arrays.toString(this.schedule.toArray()));
+        // System.out.println(Arrays.toString(this.schedule.toArray()));
     }
 }
